@@ -223,6 +223,12 @@ class WallpaperScraperGUI:
                 self.url_text.delete(1.0, tk.END)
                 self.url_text.insert(1.0, content)
                 self._log(f"Loaded URLs from {filepath}")
+            except FileNotFoundError:
+                messagebox.showerror("Error", f"File not found: {filepath}")
+            except PermissionError:
+                messagebox.showerror("Error", f"Permission denied: {filepath}")
+            except UnicodeDecodeError:
+                messagebox.showerror("Error", f"Invalid file encoding. Please use UTF-8.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to load file: {e}")
     
@@ -250,9 +256,16 @@ class WallpaperScraperGUI:
                 self._log(f"Extracting images from {line}...")
                 try:
                     response = requests.get(line, headers={'User-Agent': config.USER_AGENT}, timeout=30)
+                    response.raise_for_status()
                     extracted = extract_image_urls(response.text, line)
                     image_data.extend(extracted)
                     self._log(f"Found {len(extracted)} images")
+                except requests.Timeout:
+                    self._log(f"Timeout extracting from {line}")
+                except requests.ConnectionError:
+                    self._log(f"Connection error extracting from {line}")
+                except requests.HTTPError as e:
+                    self._log(f"HTTP error extracting from {line}: {e}")
                 except Exception as e:
                     self._log(f"Error extracting from {line}: {e}")
         
@@ -350,8 +363,14 @@ class WallpaperScraperGUI:
             stats = scraper.get_stats()
             self.progress_queue.put(('complete', '', stats))
         
+        except KeyboardInterrupt:
+            # User cancelled
+            self.progress_queue.put(('complete', '', {'total': 0, 'downloaded': 0, 'filtered': 0, 'failed': 0, 'categories': {}}))
         except Exception as e:
-            self.progress_queue.put(('failed', 'Error', str(e)))
+            # Log error and signal completion
+            import traceback
+            error_msg = f"Download error: {str(e)}\n{traceback.format_exc()}"
+            self.progress_queue.put(('failed', 'Critical Error', error_msg))
             self.progress_queue.put(('complete', '', {'total': 0, 'downloaded': 0, 'filtered': 0, 'failed': 0, 'categories': {}}))
     
     def _start_download(self):

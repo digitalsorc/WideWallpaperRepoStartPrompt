@@ -53,7 +53,8 @@ class ImageFilter:
                 return False
             
             return True
-        except Exception as e:
+        except (OSError, Image.UnidentifiedImageError, ValueError) as e:
+            # Invalid or corrupted image data
             return False
 
 
@@ -208,10 +209,23 @@ class WallpaperScraper:
                     'size': len(image_data)
                 }
         
-        except Exception as e:
+        except aiohttp.ClientError as e:
+            # Network-related errors
             self.stats['failed'] += 1
             if self.progress_callback:
-                self.progress_callback('failed', url, str(e))
+                self.progress_callback('failed', url, f"Network error: {str(e)}")
+            return None
+        except OSError as e:
+            # File system errors
+            self.stats['failed'] += 1
+            if self.progress_callback:
+                self.progress_callback('failed', url, f"File error: {str(e)}")
+            return None
+        except Exception as e:
+            # Other unexpected errors
+            self.stats['failed'] += 1
+            if self.progress_callback:
+                self.progress_callback('failed', url, f"Error: {str(e)}")
             return None
     
     async def download_images(self, image_urls: List[str], metadata_list: List[dict] = None):

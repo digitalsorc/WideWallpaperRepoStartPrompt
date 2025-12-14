@@ -70,6 +70,15 @@ def fetch_and_extract_urls(page_url: str) -> List[dict]:
         response = requests.get(page_url, headers={'User-Agent': config.USER_AGENT}, timeout=30)
         response.raise_for_status()
         return extract_image_urls(response.text, page_url)
+    except requests.Timeout:
+        print(f"Timeout fetching {page_url}", file=sys.stderr)
+        return []
+    except requests.ConnectionError:
+        print(f"Connection error fetching {page_url}", file=sys.stderr)
+        return []
+    except requests.HTTPError as e:
+        print(f"HTTP error fetching {page_url}: {e}", file=sys.stderr)
+        return []
     except Exception as e:
         print(f"Error fetching {page_url}: {e}", file=sys.stderr)
         return []
