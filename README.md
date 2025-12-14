@@ -27,6 +27,13 @@ pip install -r requirements.txt
 
 ## Usage
 
+### Quick Start
+
+For a guided start:
+```bash
+python quickstart.py
+```
+
 ### Graphical Interface (GUI)
 
 Launch the GUI application:
@@ -34,11 +41,52 @@ Launch the GUI application:
 python gui.py
 ```
 
-The GUI provides:
-- Easy URL input (paste URLs or load from file)
-- Visual filter configuration
-- Real-time progress tracking
-- Download statistics and logs
+**GUI Features:**
+- **URL Input**: Paste multiple URLs or load from a text file
+- **Output Directory**: Choose where to save wallpapers
+- **Filter Settings**:
+  - Minimum resolution (width/height)
+  - Aspect ratio range (perfect for ultrawide monitors)
+  - Minimum file size
+- **Download Settings**:
+  - Configure concurrent downloads (1-20)
+  - Set timeout values
+  - Enable/disable auto-categorization
+- **Real-time Progress**:
+  - Visual progress bar
+  - Download statistics (downloaded, filtered, failed)
+  - Detailed activity log
+- **Start/Stop Controls**: Easy download management
+
+**GUI Layout:**
+```
+┌─────────────────────────────────────────────────────────┐
+│              Wallpaper Scraper                          │
+├─────────────────────────────────────────────────────────┤
+│ Input                                                   │
+│ URLs/File: [Text area with scroll]   [Load File][Clear]│
+│ Output Dir: [wallpapers        ]     [Browse]          │
+├──────────────────────┬──────────────────────────────────┤
+│ Filter Settings      │ Download Settings                │
+│ Min Width:  [1920]   │ Concurrent: [5]                  │
+│ Min Height: [1080]   │ Timeout:    [30]                 │
+│ Min Aspect: [1.5]    │ [✓] Auto-categorize              │
+│ Max Aspect: [3.0]    │                                  │
+│ Min Size:   [100]KB  │                                  │
+├──────────────────────┴──────────────────────────────────┤
+│         [Start Download]  [Stop]                        │
+├─────────────────────────────────────────────────────────┤
+│ Progress                                                │
+│ [████████████░░░░░░░░░░░░░░] 50%                        │
+│ Processing 5/10...                                      │
+│ Downloaded: 5 | Filtered: 0 | Failed: 0                │
+├─────────────────────────────────────────────────────────┤
+│ Log                                                     │
+│ ✓ Downloaded: mountain_sunset_a1b2.jpg                 │
+│ ✓ Downloaded: ocean_waves_e5f6.jpg                     │
+│ ✗ Failed: low_res_image.jpg - Filtered                 │
+└─────────────────────────────────────────────────────────┘
+```
 
 ### Command-Line Interface (CLI)
 
