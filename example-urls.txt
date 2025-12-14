@@ -1,0 +1,12 @@
+# Example URLs file for testing the wallpaper scraper
+# You can add direct image URLs or webpage URLs
+# Lines starting with # are comments
+
+# Example direct image URLs (replace with actual URLs)
+# https://example.com/wallpaper1.jpg
+# https://example.com/wallpaper2.png
+
+# Example webpage to extract images from
+# https://example.com/wallpapers-gallery
+
+# You can also mix both types
