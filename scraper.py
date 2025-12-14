@@ -165,7 +165,8 @@ class WallpaperScraper:
         metadata['url'] = url
         
         try:
-            async with self.session.get(url, timeout=self.timeout) as response:
+            timeout = aiohttp.ClientTimeout(total=self.timeout)
+            async with self.session.get(url, timeout=timeout) as response:
                 if response.status != 200:
                     return None
                 
@@ -235,11 +236,13 @@ class WallpaperScraper:
         
         self.stats['total'] = len(image_urls)
         
-        # Create session with custom headers
+        # Create session with custom headers and timeout
+        timeout = aiohttp.ClientTimeout(total=self.timeout)
         connector = aiohttp.TCPConnector(limit=self.concurrent_downloads)
         self.session = aiohttp.ClientSession(
             connector=connector,
-            headers={'User-Agent': config.USER_AGENT}
+            headers={'User-Agent': config.USER_AGENT},
+            timeout=timeout
         )
         
         try:

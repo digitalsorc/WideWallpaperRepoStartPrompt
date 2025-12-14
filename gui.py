@@ -396,7 +396,12 @@ class WallpaperScraperGUI:
         )
         
         # Create categorizer
-        categorizer = Categorizer() if self.categorize_var.get() else None
+        if self.categorize_var.get():
+            categorizer = Categorizer()
+        else:
+            # Create a categorizer that always returns 'uncategorized'
+            categorizer = Categorizer()
+            categorizer.keywords = {}  # Empty keywords means everything is uncategorized
         
         # Create scraper
         scraper = WallpaperScraper(
@@ -422,10 +427,15 @@ class WallpaperScraperGUI:
     
     def _stop_download(self):
         """Stop download process."""
-        # Note: This is a graceful signal - downloads in progress will complete
-        self.is_downloading = False
-        self._log("\nStopping downloads (in-progress downloads will complete)...")
-        self.stop_btn.config(state=tk.DISABLED)
+        # Note: Downloads in progress will complete gracefully
+        # This prevents new downloads from starting
+        if self.download_thread and self.download_thread.is_alive():
+            self.is_downloading = False
+            self._log("\nStopping downloads (active downloads will complete)...")
+            self.stop_btn.config(state=tk.DISABLED)
+        else:
+            self._log("\nNo active downloads to stop")
+            self.stop_btn.config(state=tk.DISABLED)
 
 
 def main():
