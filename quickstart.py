@@ -5,7 +5,6 @@ This script helps you get started quickly.
 """
 
 import sys
-import os
 
 def main():
     print("=" * 60)

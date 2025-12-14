@@ -8,7 +8,7 @@ import requests
 from tqdm import tqdm
 
 import config
-from scraper import WallpaperScraper, ImageFilter, Categorizer, extract_image_urls, is_direct_image_url
+from scraper import WallpaperScraper, ImageFilter, Categorizer, extract_image_urls
 
 
 class ProgressTracker:
@@ -173,7 +173,7 @@ Examples:
     )
     
     # Create categorizer
-    categorizer = Categorizer() if not args.no_categorize else None
+    categorizer = Categorizer() if not args.no_categorize else Categorizer(keywords={})
     
     # Create progress tracker
     progress = ProgressTracker(len(image_data))

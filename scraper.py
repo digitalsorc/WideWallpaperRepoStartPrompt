@@ -1,6 +1,6 @@
 """Core wallpaper scraper module for downloading and filtering images."""
 
-import os
+
 import re
 import hashlib
 import asyncio
@@ -247,14 +247,8 @@ class WallpaperScraper:
         
         try:
             # Create tasks for concurrent downloads
-            semaphore = asyncio.Semaphore(self.concurrent_downloads)
-            
-            async def bounded_download(url, metadata):
-                async with semaphore:
-                    return await self.download_image(url, metadata)
-            
             tasks = [
-                bounded_download(url, metadata)
+                self.download_image(url, metadata)
                 for url, metadata in zip(image_urls, metadata_list)
             ]
             

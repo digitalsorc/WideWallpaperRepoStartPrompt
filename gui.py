@@ -7,7 +7,7 @@ import threading
 import queue
 from pathlib import Path
 from typing import List
-import asyncio
+
 
 import config
 from scraper import WallpaperScraper, ImageFilter, Categorizer, extract_image_urls, is_direct_image_url
@@ -447,7 +447,7 @@ def main():
     if 'clam' in style.theme_names():
         style.theme_use('clam')
     
-    app = WallpaperScraperGUI(root)
+    WallpaperScraperGUI(root)
     root.mainloop()
 
 
